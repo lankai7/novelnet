@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.novelnet.demo.mapper.ChapterMapper">
+
+    <resultMap id="chapterMap" type="com.novelnet.demo.pojo.Chapter">
+        <id property="cid" column="ccid"/>
+        <association property="book" javaType="com.novelnet.demo.pojo.Book">
+            <id property="bid" column="cbid"/>
+        </association>
+    </resultMap>
+
+    <select id="getChapter" resultMap="chapterMap">
+        select c.bid cbid, c.chapter_num, c.title, c.cid ccid, c.content,
+        b.bid bbid, b.name, b.author, b.update_time, b.introduction, b.state,
+        b.type, b.recommend_num, b.collect_num, b.issued_time, b.img_path, b.love_num
+        from chapter c
+        inner join book b on c.bid = b.bid
+        where c.bid = #{bid} and c.chapter_num = #{chapterNum}
+    </select>
+</mapper>

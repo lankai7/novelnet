@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.novelnet.demo.mapper.BookMapper">
+    <select id="getType" resultType="com.novelnet.demo.pojo.Book">
+        select distinct type from `book`
+    </select>
+
+    <select id="getBooks" resultType="com.novelnet.demo.pojo.Book">
+        select bid, name, author, update_time, introduction, state, type, recommend_num, collect_num, issued_time, img_path, love_num, comment_num
+        from `book`
+        <where>
+            <if test="type != null and type != ''">
+                type = #{type}
+            </if>
+            <if test="name != null and name != ''">
+                and name like '%${name}%'
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="bookMap" type="com.novelnet.demo.pojo.Book">
+        <id property="bid" column="bid"/>
+        <collection property="chapters" javaType="List" ofType="com.novelnet.demo.pojo.Chapter">
+            <id property="cid" column="cid"/>
+        </collection>
+    </resultMap>
+
+    <select id="getBook" resultMap="bookMap">
+        select b.bid, b.name, b.author, b.update_time, b.introduction, b.state,
+        b.type, b.recommend_num, b.collect_num, b.issued_time, b.img_path, b.love_num, b.comment_num,
+        c.cid, c.bid as cbid, c.chapter_num, c.title, c.content
+        from `book` b
+        inner join `chapter` c on c.bid = b.bid
+        where b.bid = #{bid}
+    </select>
+
+    <update id="addRecommendNum">
+        update book set recommend_num = recommend_num + ${num}
+        where bid = #{bid}
+    </update>
+
+    <update id="addLoveNum">
+        update book set love_num = love_num + ${num}
+        where bid = #{bid}
+    </update>
+
+    <update id="addCollectNum">
+        update book set collect_num = collect_num + ${num}
+        where bid = #{bid}
+    </update>
+
+    <update id="addCommentNum">
+        update book set comment_num = comment_num + ${num}
+        where bid = #{bid}
+    </update>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.novelnet.demo.mapper.BookshelfMapper">
+    <insert id="addBook">
+        insert into bookshelf(uid, bid, collect_time) values (#{uid}, #{bid}, #{collectTime})
+    </insert>
+
+    <select id="isHaveBookshelf" resultType="com.novelnet.demo.pojo.Bookshelf">
+        select * from bookshelf where uid = #{uid} and bid = #{bid}
+    </select>
+
+    <delete id="deleteBook">
+        delete from bookshelf where uid = #{uid} and bid = #{bid}
+    </delete>
+
+    <resultMap id="bookshelfMap" type="com.novelnet.demo.pojo.Bookshelf">
+        <association property="user" javaType="com.novelnet.demo.pojo.User">
+            <id property="uid" column="bsuid"/>
+        </association>
+        <association property="book" javaType="com.novelnet.demo.pojo.Book">
+            <id property="bid" column="bsbid"/>
+        </association>
+    </resultMap>
+
+    <select id="getBookshelfByUid" resultMap="bookshelfMap">
+        select bs.uid bsuid, bs.bid bsbid, collect_time, last_chapter,
+        b.bid, b.name, b.author, b.update_time, b.introduction, b.state,
+        b.type, b.recommend_num, b.collect_num, b.issued_time, b.img_path, b.love_num
+        from bookshelf bs
+        left join user u on bs.bid = u.uid
+        left join book b on bs.bid = b.bid
+        where bs.uid = #{uid}
+    </select>
+
+    <select id="getBookshelf" resultMap="bookshelfMap">
+        select bs.uid bsuid, bs.bid bsbid, collect_time, last_chapter,
+        b.bid, b.name, b.author, b.update_time, b.introduction, b.state,
+        b.type, b.recommend_num, b.collect_num, b.issued_time, b.img_path, b.love_num
+        from bookshelf bs
+        left join user u on bs.bid = u.uid
+        left join book b on bs.bid = b.bid
+        where bs.uid = #{uid} and bs.bid = #{bid}
+    </select>
+
+    <update id="updateLastChapter">
+        update bookshelf
+        set last_chapter = #{chapterNum}
+        where uid = #{uid} and bid = #{bid}
+    </update>
+</mapper>

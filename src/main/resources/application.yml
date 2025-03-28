@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lankai
+    username: root
+    password: aini1314
+
+mybatis-plus:
+  type-aliases-package: com.novelnet.demo.pojo
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    auto-mapping-behavior: full
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  reasonable: true
+  helper-dialect: mysql
+
+server:
+  server.address: 0.0.0.0
+  port: 8081
+  servlet:
+    session:
+      timeout: 86400

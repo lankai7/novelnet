@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.novelnet.demo.mapper.UserMapper">
+    <select id="login" resultType="com.novelnet.demo.pojo.User">
+        select uid, account, username, password from user where account = #{account} and password = #{password}
+    </select>
+
+    <select id="isHaveEmail" resultType="com.novelnet.demo.pojo.User">
+        select * from user where email = #{email}
+    </select>
+
+    <select id="isHaveAccount" resultType="com.novelnet.demo.pojo.User">
+        select * from user where account = #{account}
+    </select>
+
+    <insert id="enroll">
+        insert into user(account, password, username, email, sex, qq, personal_web, enroll_time)
+        values(#{user.account}, #{user.password}, #{user.username}, #{user.email}, #{user.sex}, #{user.qq}, #{user.personalWeb}, #{user.enrollTime})
+    </insert>
+
+    <select id="getUserByAccountAndEmail" resultType="com.novelnet.demo.pojo.User">
+        select * from user where account = #{account} and email = #{email}
+    </select>
+
+    <update id="getPassword">
+        update `user` set password = #{newPassword} where uid = #{uid}
+    </update>
+
+    <update id="updatePassword">
+        update `user` set password = #{newPassword} where uid = #{uid}
+    </update>
+
+    <select id="getUserById" resultType="com.novelnet.demo.pojo.User">
+        select uid, account, username, grade ,vip_status, email, sex, qq, microblog, enroll_time, user_integral, message_num, book_max_num, collect_ticket_num, personal_web
+        from `user`
+        where uid = #{uid}
+    </select>
+
+    <select id="getUserAll" resultType="com.novelnet.demo.pojo.User">
+        select uid, account, username, grade,  vip_status, email, sex, qq, microblog, enroll_time, user_integral, message_num, book_max_num, collect_ticket_num, personal_web
+        from `user`
+    </select>
+
+    <select id="getUserNoPassword" resultType="com.novelnet.demo.pojo.User">
+        select uid, account, username, grade ,vip_status, email, sex, qq, microblog, enroll_time, user_integral, message_num, book_max_num, collect_ticket_num, personal_web
+        from `user`
+        where uid = #{uid}
+    </select>
+
+    <update id="updateUser">
+        update `user` set account = #{user.account}, username = #{user.username}, email = #{user.email}
+        , sex = #{user.sex}, qq = #{user.qq}, microblog = #{user.microblog}, personal_web = #{user.personalWeb}
+        where uid = #{user.uid}
+    </update>
+
+    <update id="addUserIntegral">
+        update `user` set user_integral = #{user.userIntegral} + #{num}
+        where uid = #{user.uid}
+    </update>
+
+    <update id="updateVIPStatus">
+        UPDATE user SET vip_status = #{isVip} WHERE uid = #{userId}
+    </update>
+
+</mapper>
