@@ -27,4 +27,5 @@ public class Book {
     private int loveNum;
     private int commentNum;
     private List<Chapter> chapters;
+    private String createTime;
 }

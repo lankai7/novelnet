@@ -4,8 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.novelnet.demo.mapper.UserMapper">
     <select id="login" resultType="com.novelnet.demo.pojo.User">
-        select uid, account, username, password from user where account = #{account} and password = #{password}
+        select uid, account, username, password, is_admin from user where account = #{account} and password = #{password}
     </select>
+
+    <update id="updateAdminStatus">
+        UPDATE user SET is_admin = #{isAdmin} WHERE uid = #{userId}
+    </update>
 
     <select id="isHaveEmail" resultType="com.novelnet.demo.pojo.User">
         select * from user where email = #{email}
@@ -39,7 +43,7 @@
     </select>
 
     <select id="getUserAll" resultType="com.novelnet.demo.pojo.User">
-        select uid, account, username, grade,  vip_status, email, sex, qq, microblog, enroll_time, user_integral, message_num, book_max_num, collect_ticket_num, personal_web
+        select uid, account, username, vip_status, grade, email, sex, qq, microblog, enroll_time, user_integral, message_num, book_max_num, collect_ticket_num, personal_web, is_admin
         from `user`
     </select>
 

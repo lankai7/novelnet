@@ -95,4 +95,8 @@ public class UserServiceImpl implements IUserService {
     public boolean updateVIPStatus(Integer userId, Integer isVip) {
         return userMapper.updateVIPStatus(userId, isVip) > 0;
     }
+    @Override
+    public boolean updateAdminStatus(Integer userId, Integer isAdmin) {
+        return userMapper.updateAdminStatus(userId, isAdmin) > 0;
+    }
 }

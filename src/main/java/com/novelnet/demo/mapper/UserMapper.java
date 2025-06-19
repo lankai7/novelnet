@@ -28,5 +28,6 @@ public interface UserMapper {
     List<User> getUserAll();
     //vip状态
     int updateVIPStatus(@Param("userId") Integer userId, @Param("isVip") Integer isVip);
-
+    //管理员状态
+    int updateAdminStatus(@Param("userId") Integer userId, @Param("isAdmin") Integer isAdmin);
 }

@@ -9,7 +9,7 @@ public interface BookMapper {
     //获取图书类型
     List<Book> getType();
     //查所有图书
-    List<Book> getBooks(@Param("type") String type, @Param("name") String name);
+    List<Book> getBooks(@Param("type") String type, @Param("name") String name, @Param("orderBy")String orderBy);
     //查图书详情
     Book getBook(@Param("bid") int bid);
     //增加推荐数，点赞数,收藏数,评论数

@@ -2,9 +2,7 @@ package com.novelnet.demo.service.impl;
 
 import com.novelnet.demo.mapper.BookMapper;
 import com.novelnet.demo.pojo.Book;
-import com.novelnet.demo.pojo.Result;
 import com.novelnet.demo.service.IBookService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,8 +21,8 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public List<Book> getBooks(String type, String name, int num) {
-        List<Book> bookList = bookMapper.getBooks(type, name);
+    public List<Book> getBooks(String type, String name, int num, String orderBy) {
+        List<Book> bookList = bookMapper.getBooks(type, name, orderBy);
         if (num < 0 || bookList.size() <= num) {
             return bookList;
         }

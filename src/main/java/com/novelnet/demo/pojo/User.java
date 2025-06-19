@@ -19,7 +19,6 @@ public class User {
     private String username;
     private String password;
     private int grade;
-    private int vip_status;
     private String email;
     private String sex;
     private String qq;
@@ -31,4 +30,7 @@ public class User {
     private int collectTicketNum;
     private String personalWeb;
     private List<Book> books;
+    private int vipStatus;
+    private Integer isAdmin; // 0: 普通用户, 1: 管理员
+
 }

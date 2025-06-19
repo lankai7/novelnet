@@ -8,17 +8,27 @@
     </select>
 
     <select id="getBooks" resultType="com.novelnet.demo.pojo.Book">
-        select bid, name, author, update_time, introduction, state, type, recommend_num, collect_num, issued_time, img_path, love_num, comment_num
+        select bid, name, author, update_time, introduction, state, type, recommend_num, collect_num, issued_time, img_path, love_num, comment_num, create_time
         from `book`
         <where>
             <if test="type != null and type != ''">
                 type = #{type}
             </if>
             <if test="name != null and name != ''">
-                and name like '%${name}%'
+                and name like CONCAT('%', #{name}, '%')
             </if>
         </where>
+        <!-- 动态排序 -->
+        <choose>
+            <when test="orderBy == 'recommend_num'">
+                ORDER BY recommend_num DESC
+            </when>
+            <otherwise>
+                ORDER BY create_time DESC
+            </otherwise>
+        </choose>
     </select>
+
 
     <resultMap id="bookMap" type="com.novelnet.demo.pojo.Book">
         <id property="bid" column="bid"/>

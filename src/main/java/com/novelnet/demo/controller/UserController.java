@@ -27,16 +27,26 @@ public class UserController {
      * 状态码：200-成功， 401-用户名或密码错误
      */
     @PostMapping("/login")
-    public Result login(String account, String password){
+    public Result login(String account, String password) {
         User user = iUserService.login(account, password);
         if (user != null) {
             Map<String, Object> map = new HashMap<>();
             map.put("user", user);
+            map.put("isAdmin", user.getIsAdmin()); // 确保 token 里包含 isAdmin
+
             String token = TokenUtil.makeToken(map);
-            return new Result(200, token, "登陆成功！");
+
+            // 让前端一次性获取 user 和 token，减少请求
+            Map<String, Object> result = new HashMap<>();
+            result.put("token", token);
+            result.put("user", user);
+
+            return new Result(200, result, "登录成功！");
         }
         return new Result(401, null, "LOGIN ERROR: 用户名或密码错误");
     }
+
+
 
     /**
      * 注册方法
@@ -148,8 +158,8 @@ public class UserController {
     public Result getUserAll(){
         List<User> user = iUserService.getUserAll();
         return user != null ?
-                new Result(200, user, "updateUser OK!!!") :
-                new Result(400, null, "updateUser ERROR!");
+                new Result(200, user, "get OK!!!") :
+                new Result(400, null, "get ERROR!");
     }
     /**
      * 修改用户vip信息
@@ -177,4 +187,33 @@ public class UserController {
         }
         return ResponseEntity.ok(response);
     }
+
+    /**修改用户管理员权限
+     * 1-管理员，0-普通用户
+     * code = 200 修改成功
+     * **/
+    @PutMapping("/updateAdminStatus")
+    public ResponseEntity<Map<String, Object>> updateAdminStatus(@RequestBody Map<String, Object> payload) {
+        Integer userId = (Integer) payload.get("uid");
+        Integer isAdmin = (Integer) payload.get("isAdmin");
+
+        Map<String, Object> response = new HashMap<>();
+        if (userId == null || isAdmin == null) {
+            response.put("code", 400);
+            response.put("msg", "参数错误");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        boolean success = iUserService.updateAdminStatus(userId, isAdmin);
+        if (success) {
+            response.put("code", 200);
+            response.put("msg", "管理员状态更新成功");
+        } else {
+            response.put("code", 500);
+            response.put("msg", "管理员状态更新失败");
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }
+

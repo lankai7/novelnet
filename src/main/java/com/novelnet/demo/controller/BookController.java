@@ -3,6 +3,7 @@ package com.novelnet.demo.controller;
 import com.novelnet.demo.pojo.Book;
 import com.novelnet.demo.pojo.Result;
 import com.novelnet.demo.service.IBookService;
+import com.novelnet.demo.service.PythonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,19 @@ import java.util.List;
 public class BookController {
     @Autowired
     private IBookService iBookService;
+    private final PythonService pythonService;
+
+    public BookController(PythonService pythonService) {
+        this.pythonService = pythonService;
+    }
+
+    /**
+     * 处理前端请求py脚本
+     */
+    @PostMapping("/scrape")
+    public String scrapeBook(@RequestParam String bookId, @RequestParam String bookType) {
+        return pythonService.scrapeBook(bookId, bookType);
+    }
 
     /**
      * 获取图书所有类型的方法，返回字符串集合
@@ -31,8 +45,8 @@ public class BookController {
      * 返回值：200-成功
      */
     @GetMapping("/getBooks")
-    public Result getBooks(String type, String name, int num){
-        List<Book> books = iBookService.getBooks(type, name, num);
+    public Result getBooks(String type, String name, int num, String orderBy){
+        List<Book> books = iBookService.getBooks(type, name, num, orderBy);
         return new Result(200, books, "getBooks OK!!!");
     }
 
@@ -44,6 +58,7 @@ public class BookController {
     @GetMapping("/getBook/{bid}")
     public Result getBook(@PathVariable("bid") int bid){
         Book book = iBookService.getBook(bid);
+        iBookService.addRecommendNum(bid, 1);
         return new Result(200, book, "getBook OK!!!");
     }
 

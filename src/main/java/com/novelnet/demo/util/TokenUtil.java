@@ -1,38 +1,52 @@
 package com.novelnet.demo.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * JWT工具类
- * 生成和解析token
- */
 public class TokenUtil {
-    //密钥：可自定义，字符串，也可配置在配置文件中
-    private static final String secret = "tokenKey";
+    // Base64 编码密钥（长度 >= 32，推荐更长）
+    private static final String SECRET_KEY = "M1dNczNjdXJFS2lEMm5wQVRKck1ZelN1TjRzV3BJV0R=";
+    private static final SecretKey SECRET = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+
+    // Token 过期时间（1天）
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
     /**
-     * 生成token
+     * 生成 Token（带用户 ID）
      */
-    public static String makeToken(Map<String, Object> claim){
-        //设置过期时间
-        Date date = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
-        //生成token
-        return Jwts.builder().setClaims(claim)
-                .setExpiration(date)
-                .signWith(SignatureAlgorithm.HS256, secret)
+    public static String makeToken(Map<String, Object> claim) {
+        return Jwts.builder()
+                .setClaims(claim)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     /**
-     * 解析token
+     * 解析 Token（带异常处理）
      */
-    public static Claims parseToken(String token){
-        //解析token的方法
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    public static Claims parseToken(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(SECRET)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token 已过期！");
+        } catch (MalformedJwtException e) {
+            System.out.println("Token 格式错误！");
+        } catch (SignatureException e) {
+            System.out.println("Token 签名无效！");
+        } catch (Exception e) {
+            System.out.println("Token 解析异常：" + e.getMessage());
+        }
+        return null;
     }
 }

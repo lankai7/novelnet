@@ -27,4 +27,6 @@ public interface IUserService {
     List<User> getUserAll();
     //vip状态
     boolean updateVIPStatus(Integer userId, Integer isVip);
+
+    boolean updateAdminStatus(Integer userId, Integer isAdmin);
 }
